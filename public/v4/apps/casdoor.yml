@@ -1,0 +1,71 @@
+captainVersion: 4
+services:
+    $$cap_appname:
+        image: casbin/casdoor:$$cap_casdoor_version
+        restart: always
+        environment:
+            appname: $$cap_casdoor_appname
+            driverName: $$cap_casdoor_driverName
+            dataSourceName: $$cap_casdoor_dataSourceName
+            runmode: $$cap_casdoor_runmode
+            httpport: 8000
+            copyrequestbody: $$cap_casdoor_copyrequestbody
+            authState: $$cap_casdoor_authState
+            staticBaseUrl: $$cap_casdoor_staticBaseUrl
+            isDemoMode: $$cap_casdoor_isDemoMode
+            dbName: $$cap_casdoor_dbName
+        caproverExtra:
+            containerHttpPort: 8000
+caproverOneClickApp:
+    variables:
+        - id: $$cap_casdoor_version
+          label: Casdoor Version
+          description: Choose the latest version of Casdoor from https://hub.docker.com/r/casbin/casdoor/tags
+          defaultValue: v1.232.0
+        - id: $$cap_casdoor_driverName
+          label: Driver Name
+          description: Casdoor supports mysql, mssql, sqlite3, postgres. Casdoor uses mysql by default. `mysql` | `sqlite` | `postgres`.
+          defaultValue: sqlite
+        - id: $$cap_casdoor_dataSourceName
+          label: Data Source Name
+          description: DB connection string, mode details https://casdoor.org/docs/basic/server-installation#configure-database
+          defaultValue: 'file:casdoor.db?cache=shared&mode=memory'
+        - id: $$cap_casdoor_dbName
+          label: Database Name
+          description:
+          defaultValue: casdoor
+        - id: $$cap_casdoor_appname
+          label: App Name
+          description: App Name is the application name, which currently has no practical use
+          defaultValue: casdoor
+        - id: $$cap_casdoor_runmode
+          label: Run mode
+          description: The mode of running casdoor, available values are `dev` | `prod`
+          defaultValue: prod
+        - id: $$cap_casdoor_copyrequestbody
+          label: Copy Request Body
+          description: Set `true` | `false`
+          defaultValue: 'false'
+        - id: $$cap_casdoor_authState
+          label: Auth State
+          description: s the authorization application name. This parameter will be checked when logging in.
+          defaultValue: casdoor
+        - id: $$cap_casdoor_staticBaseUrl
+          label: Static Base URL
+          description: Static Base URL is address of the static image when the system initializes the database.
+          defaultValue: https://cdn.casbin.org
+        - id: $$cap_casdoor_isDemoMode
+          label: Is Demo Mode
+          description: Set `true` | `false`
+          defaultValue: 'false'
+    instructions:
+        start: |-
+            Casdoor is a UI-first Identity Access Management (IAM) / Single-Sign-On (SSO) platform based on OAuth 2.0, OIDC, SAML and CAS.
+            More details: https://casdoor.org/
+        end: |-
+            Casdoor has been successfully deployed and is available <a href="http://$$cap_appname.$$cap_root_domain">here</a>. Make sure to enable HTTPS!
+            Default user and password is `admin` / `123`
+    displayName: Casdoor
+    isOfficial: false
+    description: Casdoor is a UI-first Identity Access Management (IAM) / Single-Sign-On (SSO) platform based on OAuth 2.0, OIDC, SAML and CAS.
+    documentation: https://casdoor.org/docs/overview
