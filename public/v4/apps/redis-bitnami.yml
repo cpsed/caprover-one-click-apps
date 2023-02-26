@@ -1,0 +1,66 @@
+captainVersion: 4
+services:
+    $$cap_appname:
+        volumes:
+            - $$cap_appname-redis-data:/bitnami/redis/data
+            - $$cap_appname-redis-certs:/opt/bitnami/redis/certs
+        restart: always
+        image: bitnami/redis:$$cap_redis_version
+        environment:
+            ALLOW_EMPTY_PASSWORD: $$cap_allow_empty_password
+            REDIS_PASSWORD: $$cap_redis_password
+            REDIS_DISABLE_COMMANDS: $$cap_redis_disable_commands
+
+            REDIS_TLS_ENABLED: $$cap_REDIS_TLS_ENABLED
+            REDIS_TLS_PORT_NUMBER: $$cap_REDIS_TLS_PORT_NUMBER
+            REDIS_TLS_CERT_FILE: /opt/bitnami/redis/certs/$$cap_CERT_NAME
+            REDIS_TLS_KEY_FILE: /opt/bitnami/redis/certs/$$cap_KEY_NAME
+            REDIS_TLS_CA_FILE: /opt/bitnami/redis/certs/$$cap_CA_NAME
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+caproverOneClickApp:
+    variables:
+        - id: $$cap_redis_version
+          label: Redis Version Tag
+          description: 'Check out their Docker page for the valid tags: https://hub.docker.com/r/bitnami/redis/tags'
+          defaultValue: '7.0.8'
+          validRegex: /^([^\s^\/])+$/
+        - id: $$cap_redis_password
+          label: Redis Password
+          description: Leave empty if you set `Allow Empty Password` to `yes`. No `@` allow.
+          # validRegex: /^(?!.*@).*$/
+        - id: $$cap_allow_empty_password
+          label: Allow Empty Password
+          validRegex: /^(yes|no)$/
+          description: This env variable is only recommended for testing or development purposes. We strongly recommend specifying the `Redis Password` for any other scenario.
+        - id: $$cap_redis_disable_commands
+          label: Redis Disable Commands
+          description: For security reasons, you may want to disable some commands. Comma-separated list of Redis commands to disable. Defaults to empty.
+
+        - id: $$cap_REDIS_TLS_ENABLED
+          label: Redis TLS Enabled
+          defaultValue: 'no'
+          validRegex: /^(yes|no)$/
+        - id: $$cap_REDIS_TLS_PORT_NUMBER
+          label: Redis TLS Port Number
+          description: To enable non-TLS traffic, set `Redis TLS Port Number` to another port different than `0`
+          defaultValue: '6379'
+        - id: $$cap_CERT_NAME
+          label: Name of The Cert File
+          defaultValue: 'redis.crt'
+        - id: $$cap_KEY_NAME
+          label: Name of The Key File
+          defaultValue: 'redis.key'
+        - id: $$cap_CA_NAME
+          label: Name of The CA File
+          defaultValue: 'redisCA.crt'
+    instructions:
+        start: >-
+            Redis is an open source key-value store that functions as a data structure server.
+            After installation on CapRover, it will be available as `srv-captain--YOUR_CONTAINER_NAME` at port `6379` to other CapRover apps.
+            Enter your Redis container name and click on next. It will take about a minute for the process to finish.
+        end: "Redis is deployed and available as srv-captain--$$cap_appname:6379 to other apps. For example with NodeJS: const client = redis.createClient(6379, 'srv-captain--$$cap_appname' , {password: '$$cap_redis_password'})"
+    displayName: 'Redis (Bitnami)'
+    isOfficial: false
+    description: Redis is an in-memory data structure store, used as a database, cache and message broker
+    documentation: Taken from https://hub.docker.com/r/bitnami/redis
